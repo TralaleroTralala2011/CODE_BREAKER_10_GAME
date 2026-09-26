@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CODE BREAKER</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    min-height:100vh;
+    font-family:Arial, sans-serif;
+    color:#eaf4ff;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(56,189,248,.12), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(168,85,247,.14), transparent 30%),
+        linear-gradient(135deg,#030712,#071426 50%,#050816);
+    padding:25px 15px;
+}
+
+.game{
+    width:100%;
+    max-width:900px;
+    margin:auto;
+    background:rgba(5,12,28,.88);
+    border:1px solid rgba(56,189,248,.3);
+    border-radius:24px;
+    padding:25px;
+    box-shadow:
+        0 0 35px rgba(56,189,248,.12),
+        0 0 70px rgba(168,85,247,.08);
+    backdrop-filter:blur(12px);
+}
+
+header{
+    text-align:center;
+    margin-bottom:22px;
+}
+
+.logo{
+    font-size:38px;
+    font-weight:900;
+    letter-spacing:2px;
+    color:#eaf4ff;
+    text-shadow:
+        0 0 10px #38bdf8,
+        0 0 25px rgba(56,189,248,.5);
+}
+
+.subtitle{
+    margin-top:8px;
+    color:#8ba4c7;
+    font-size:14px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:15px;
+}
+
+.card{
+    background:linear-gradient(145deg,rgba(13,30,55,.9),rgba(7,18,38,.9));
+    border:1px solid rgba(56,189,248,.18);
+    border-radius:15px;
+    padding:15px;
+    text-align:center;
+}
+
+.card-title{
+    font-size:11px;
+    color:#7189aa;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:6px;
+}
+
+.card-value{
+    font-size:25px;
+    font-weight:900;
+    color:#f4f9ff;
+}
+
+#diem{
+    color:#38bdf8;
+}
+
+#doKho{
+    margin:15px auto;
+    width:max-content;
+    padding:8px 18px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:800;
+    border:1px solid;
+}
+
+.do{
+    color:#4ade80;
+    border-color:#4ade80!important;
+    background:rgba(74,222,128,.08);
+}
+
+.vua{
+    color:#facc15;
+    border-color:#facc15!important;
+    background:rgba(250,204,21,.08);
+}
+
+.sieu{
+    color:#fb7185;
+    border-color:#fb7185!important;
+    background:rgba(251,113,133,.08);
+}
+
+.huyen{
+    color:#c084fc;
+    border-color:#c084fc!important;
+    background:rgba(192,132,252,.1);
+    box-shadow:0 0 18px rgba(192,132,252,.2);
+}
+
+.timer-box{
+    margin:10px 0 20px;
+}
+
+.timer-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:7px;
+    font-size:13px;
+    color:#89a2c4;
+}
+
+#time{
+    color:#38bdf8;
+    font-size:20px;
+    font-weight:900;
+}
+
+.timer-bar{
+    height:9px;
+    border-radius:999px;
+    background:#101e35;
+    overflow:hidden;
+    border:1px solid rgba(56,189,248,.15);
+}
+
+#thanhTime{
+    height:100%;
+    width:100%;
+    background:linear-gradient(90deg,#38bdf8,#a855f7);
+    transition:width .4s linear;
+    box-shadow:0 0 12px rgba(56,189,248,.55);
+}
+
+#thanhTime.nguyHiem{
+    background:linear-gradient(90deg,#fb7185,#ef4444);
+    box-shadow:0 0 15px rgba(239,68,68,.7);
+}
+
+.code-box{
+    border:1px solid rgba(168,85,247,.3);
+    background:
+        radial-gradient(circle at 50% 0%,rgba(168,85,247,.1),transparent 50%),
+        rgba(7,17,36,.8);
+    border-radius:20px;
+    padding:28px 20px;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.code-label{
+    color:#7289a9;
+    font-size:12px;
+    letter-spacing:2px;
+    margin-bottom:17px;
+}
+
+#dayso{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    min-height:75px;
+}
+
+.so{
+    min-width:75px;
+    padding:14px 10px;
+    border-radius:13px;
+    background:linear-gradient(145deg,#102848,#09182d);
+    border:1px solid rgba(56,189,248,.25);
+    color:#f1f7ff;
+    font-size:22px;
+    font-weight:900;
+    box-shadow:inset 0 0 12px rgba(56,189,248,.04);
+}
+
+.so.hidden{
+    color:#38bdf8;
+    border-color:#38bdf8;
+    box-shadow:
+        0 0 12px rgba(56,189,248,.25),
+        inset 0 0 15px rgba(56,189,248,.08);
+}
+
+.answer-area{
+    text-align:center;
+}
+
+#nhap{
+    width:180px;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid rgba(56,189,248,.3);
+    background:#071427;
+    color:white;
+    font-size:20px;
+    text-align:center;
+    outline:none;
+}
+
+#nhap:focus{
+    border-color:#38bdf8;
+    box-shadow:0 0 15px rgba(56,189,248,.2);
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    font-weight:800;
+    transition:.2s;
+}
+
+#kiemtra,
+#batdau{
+    padding:14px 25px;
+    margin-left:8px;
+    border-radius:12px;
+    color:white;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    box-shadow:0 0 15px rgba(59,130,246,.2);
+}
+
+#kiemtra:hover,
+#batdau:hover{
+    transform:translateY(-2px);
+    box-shadow:
+        0 0 20px rgba(56,189,248,.35),
+        0 0 30px rgba(168,85,247,.2);
+}
+
+#kiemtra:active,
+#batdau:active{
+    transform:scale(.96);
+}
+
+#batdau{
+    display:block;
+    margin:18px auto 0;
+    min-width:180px;
+}
+
+#ketqua{
+    text-align:center;
+    min-height:32px;
+    margin-top:18px;
+    font-size:18px;
+    font-weight:900;
+}
+
+.dung{
+    color:#4ade80;
+}
+
+.sai{
+    color:#fb7185;
+}
+
+#thuong{
+    text-align:center;
+    min-height:25px;
+    margin-top:8px;
+    color:#facc15;
+    font-weight:800;
+}
+
+.answer-reveal{
+    margin:16px auto 0;
+    max-width:650px;
+    padding:15px 18px;
+    border-radius:14px;
+    border:1px solid rgba(251,113,133,.35);
+    background:rgba(127,29,29,.13);
+    display:none;
+}
+
+.answer-title{
+    color:#fb7185;
+    font-weight:900;
+    margin-bottom:5px;
+}
+
+.answer-number{
+    color:#fff;
+    font-size:25px;
+    font-weight:900;
+}
+
+.answer-explain{
+    color:#a9bbd3;
+    margin-top:7px;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.continue-box{
+    display:none;
+    margin:20px auto;
+    padding:22px;
+    text-align:center;
+    border-radius:18px;
+    border:1px solid rgba(192,132,252,.4);
+    background:rgba(76,29,149,.12);
+    box-shadow:0 0 25px rgba(168,85,247,.1);
+}
+
+.continue-title{
+    color:#c084fc;
+    font-size:20px;
+    font-weight:900;
+    margin-bottom:8px;
+}
+
+.continue-text{
+    color:#9eb1ca;
+    font-size:14px;
+    margin-bottom:16px;
+}
+
+.choice-btn{
+    padding:13px 20px;
+    border-radius:11px;
+    margin:4px;
+    color:white;
+}
+
+.yes{
+    background:linear-gradient(135deg,#059669,#16a34a);
+    box-shadow:0 0 15px rgba(34,197,94,.2);
+}
+
+.no{
+    background:linear-gradient(135deg,#475569,#334155);
+}
+
+.choice-btn:hover{
+    transform:translateY(-2px);
+}
+
+#chienThang{
+    display:none;
+    text-align:center;
+    padding:20px;
+    border-radius:18px;
+    margin-top:15px;
+    border:1px solid rgba(74,222,128,.35);
+    background:rgba(20,83,45,.1);
+}
+
+.trophy{
+    font-size:50px;
+    margin-bottom:8px;
+}
+
+.win-title{
+    color:#4ade80;
+    font-size:25px;
+    font-weight:900;
+}
+
+.win-score{
+    margin-top:8px;
+    color:#facc15;
+    font-weight:900;
+}
+
+#huongDan{
+    margin-top:22px;
+    border-top:1px solid rgba(56,189,248,.12);
+    padding-top:15px;
+}
+
+#huongDan summary{
+    cursor:pointer;
+    color:#8ca5c6;
+    text-align:center;
+    font-weight:700;
+    font-size:14px;
+    padding:10px;
+    user-select:none;
+}
+
+#huongDan summary:hover{
+    color:#38bdf8;
+}
+
+.help-content{
+    margin-top:12px;
+    padding:18px;
+    border-radius:15px;
+    background:rgba(7,18,37,.7);
+    color:#91a6c3;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.help-content strong{
+    color:#dbeafe;
+}
+
+#giaiThich{
+    margin-top:8px;
+    color:#9bb0cb;
+}
+
+#phaoHoa{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:9999;
+}
+
+@keyframes winPulse{
+    0%{transform:scale(1)}
+    50%{transform:scale(1.03)}
+    100%{transform:scale(1)}
+}
+
+.chienThang{
+    animation:winPulse .7s ease;
+}
+
+@media(max-width:650px){
+    .game{
+        padding:17px;
+        border-radius:18px;
+    }
+
+    .logo{
+        font-size:29px;
+    }
+
+    .stats{
+        gap:7px;
+    }
+
+    .card{
+        padding:11px 5px;
+    }
+
+    .card-value{
+        font-size:20px;
+    }
+
+    #nhap{
+        width:145px;
+    }
+
+    #kiemtra{
+        padding:14px 15px;
+    }
+
+    .so{
+        min-width:60px;
+        font-size:18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="phaoHoa"></canvas>
+
+<div class="game">
+
+<header>
+    <div class="logo">💻 CODE BREAKER</div>
+    <div class="subtitle">
+        Tìm số còn thiếu trong dãy và phá giải quy luật!
+        <br>
+        10 màn thử thách + rất nhiều bộ test ngẫu nhiên
+    </div>
+</header>
+
+<div class="stats">
+
+    <div class="card">
+        <div class="card-title">Điểm</div>
+        <div class="card-value" id="diem">0</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Vòng</div>
+        <div class="card-value">
+            <span id="man">1</span> / <span id="tongVong">10</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Thời gian</div>
+        <div class="card-value">
+            <span id="time">30</span>s
+        </div>
+    </div>
+
+</div>
+
+<div id="doKho" class="do">🟢 DỄ</div>
+
+<div class="timer-box">
+
+    <div class="timer-top">
+        <span>⏱️ THỜI GIAN CÒN LẠI</span>
+        <span><span id="time2">30</span>s</span>
+    </div>
+
+    <div class="timer-bar">
+        <div id="thanhTime"></div>
+    </div>
+
+</div>
+
+<div class="code-box">
+
+    <div class="code-label">
+        🔐 GIẢI MÃ DÃY SỐ
+    </div>
+
+    <div id="dayso"></div>
+
+</div>
+
+<div class="answer-area" id="traloi">
+
+    <input
+        id="nhap"
+        type="number"
+        placeholder="Nhập số..."
+        autocomplete="off"
+    >
+
+    <button id="kiemtra">
+        🔓 KIỂM TRA
+    </button>
+
+</div>
+
+<div id="ketqua"></div>
+
+<div id="thuong"></div>
+
+<div class="answer-reveal" id="dapAnHien">
+
+    <div class="answer-title">
+        💡 ĐÁP ÁN ĐÚNG
+    </div>
+
+    <div class="answer-number" id="soDung"></div>
+
+    <div class="answer-explain" id="giaiThichSai"></div>
+
+</div>
+
+<div class="continue-box" id="tiepTuc">
+    <div class="continue-title" id="continueTitle">🔥 TIẾP TỤC THỬ THÁCH!</div>
+    <div class="continue-text" id="continueText">
+        Bạn đã vượt qua màn hiện tại. Sẵn sàng mở khóa màn tiếp theo?
+    </div>
+    <button class="choice-btn yes" id="choiTiep">✅ CHƠI TIẾP</button>
+    <button class="choice-btn no" id="dungLai">❌ DỪNG LẠI</button>
+</div>
+
+<div id="chienThang">
+
+    <div class="trophy">🏆</div>
+
+    <div class="win-title">
+        CODE BREAKER HOÀN THÀNH!
+    </div>
+
+    <div class="win-score" id="diemCuoi"></div>
+
+</div>
+
+<button id="batdau">
+    🚀 BẮT ĐẦU GAME
+</button>
+
+<details id="huongDan">
+    <summary>🧠 XEM LUẬT CHƠI & CÁC DẠNG QUY LUẬT</summary>
+    <div class="help-content">
+        <strong>🎮 Cách chơi</strong><br>
+        Mỗi màn có một dãy số bị ẩn một vị trí. Hãy tìm quy luật và nhập số còn thiếu.
+        Có nhiều bộ test ngẫu nhiên nên chơi lại sẽ có đề khác.
+
+        <br><br>
+        <strong>⏱️ Thời gian</strong><br>
+        Màn 1–3: 35 giây · Màn 4–6: 40 giây · Màn 7–8: 45 giây · Màn 9–10: 55 giây.
+
+        <br><br>
+        <strong>🔥 10 màn</strong><br>
+        1. Cộng/trừ đều ·
+        2. Nhân/chia ·
+        3. Hiệu tăng dần ·
+        4. Số chính phương/lập phương ·
+        5. Xen kẽ hai quy luật ·
+        6. Fibonacci biến thể ·
+        7. Nhân rồi cộng/trừ ·
+        8. Chẵn/lẻ và vị trí ·
+        9. Số nguyên tố/chữ số ·
+        10. Quy luật nhiều lớp.
+
+        <br><br>
+        <strong>🧩 Mẹo</strong><br>
+        Đừng chỉ nhìn khoảng cách giữa hai số. Hãy thử nhìn phép nhân,
+        phép cộng, vị trí, số nguyên tố, tổng chữ số và quy luật xen kẽ.
+
+        <br><br>
+        <strong>🧠 Giải thích màn hiện tại</strong>
+        <div id="giaiThich">Chưa có giải thích.</div>
+    </div>
+</details>
+
+</div>
+
+<script>
+let man = 1;
+let diem = 0;
+let dapAn = 0;
+let thoiGian = 35;
+let timer = null;
+let dangChoi = false;
+let dayHienTai = [];
+let giaiHienTai = "";
+
+const nhap = document.getElementById("nhap");
+const kiemtra = document.getElementById("kiemtra");
+const batdau = document.getElementById("batdau");
+const ketqua = document.getElementById("ketqua");
+const thuong = document.getElementById("thuong");
+const dayso = document.getElementById("dayso");
+const dapAnHien = document.getElementById("dapAnHien");
+const soDung = document.getElementById("soDung");
+const giaiThichSai = document.getElementById("giaiThichSai");
+const tiepTuc = document.getElementById("tiepTuc");
+const chienThang = document.getElementById("chienThang");
+const giaiThich = document.getElementById("giaiThich");
+
+function rand(a,b){
+    return Math.floor(Math.random()*(b-a+1))+a;
+}
+
+function soNguyenTo(n){
+    if(n < 2) return false;
+    for(let i=2;i*i<=n;i++){
+        if(n%i===0) return false;
+    }
+    return true;
+}
+
+function tongChuSo(n){
+    n=Math.abs(n);
+    let s=0;
+    while(n>0){
+        s+=n%10;
+        n=Math.floor(n/10);
+    }
+    return s;
+}
+
+function taoDay(so, ham, moTa){
+    let day=[so];
+    for(let i=1;i<7;i++){
+        so=ham(so,i);
+        day.push(so);
+    }
+    return {day,moTa};
+}
+
+function taoCauHoi(){
+    clearInterval(timer);
+    ketqua.textContent="";
+    thuong.textContent="";
+    dapAnHien.style.display="none";
+    tiepTuc.style.display="none";
+
+    let kieu, r, data;
+
+    if(man===1){
+        // Cộng/trừ đều
+        let x=rand(5,35), buoc=rand(3,12);
+        if(Math.random()<0.5)
+            data=taoDay(x,(v)=>v+buoc,`Quy luật: mỗi bước cộng ${buoc}.`);
+        else
+            data=taoDay(x+buoc*6,(v)=>v-buoc,`Quy luật: mỗi bước trừ ${buoc}.`);
+    }
+
+    else if(man===2){
+        // Nhân/chia
+        let x=rand(2,8), nhan=rand(2,4);
+        data=taoDay(x,(v)=>v*nhan,`Quy luật: mỗi bước nhân ${nhan}.`);
+    }
+
+    else if(man===3){
+        // Hiệu tăng dần / giảm dần
+        let x=rand(3,15), b=rand(1,5), dau=Math.random()<0.5?1:-1;
+        data=taoDay(x,(v,i)=>v+dau*b*i,
+            `Quy luật: khoảng cách thay đổi theo cấp số cộng: ${dau>0?"+":"-"}${b}, ${dau>0?"+":"-"}${b*2}, ${dau>0?"+":"-"}${b*3}...`);
+    }
+
+    else if(man===4){
+        // Chính phương / lập phương / số mũ
+        kieu=rand(0,2);
+        let x=rand(2,6);
+        if(kieu===0){
+            let start=x;
+            data=taoDay(start,(v,i)=>(i+2)*(i+2),
+                `Quy luật: các số chính phương liên tiếp: 2², 3², 4²...`);
+        }else if(kieu===1){
+            let start=x;
+            data=taoDay(start,(v,i)=>(i+2)*(i+2)*(i+2),
+                `Quy luật: các số lập phương liên tiếp: 2³, 3³, 4³...`);
+        }else{
+            let nhan=rand(2,3);
+            data=taoDay(x,(v)=>v*nhan,
+                `Quy luật: dãy lũy thừa, mỗi bước nhân ${nhan}.`);
+        }
+    }
+
+    else if(man===5){
+        // Xen kẽ hai phép tính
+        let x=rand(2,10), cong=rand(2,8), nhan=rand(2,4);
+        data=taoDay(x,(v,i)=>{
+            if(i%2===1) return v+cong;
+            return v*nhan;
+        },`Quy luật xen kẽ: +${cong}, ×${nhan}, +${cong}, ×${nhan}...`);
+    }
+
+    else if(man===6){
+        // Fibonacci biến thể
+        let a=rand(1,8), b=rand(2,10), them=rand(0,3);
+        let day=[a,b];
+        for(let i=2;i<8;i++){
+            let c=day[i-1]+day[i-2]+them;
+            day.push(c);
+        }
+        data={
+            day,
+            moTa: them===0
+                ? "Quy luật Fibonacci: số sau bằng tổng hai số trước."
+                : `Quy luật: số sau = tổng hai số trước + ${them}.`
+        };
+    }
+
+    else if(man===7){
+        // Nhân rồi cộng/trừ
+        let x=rand(2,9), nhan=rand(2,4), cong=rand(1,9);
+        let dau=Math.random()<0.5?1:-1;
+        data=taoDay(x,(v)=>v*nhan+dau*cong,
+            `Quy luật: mỗi bước nhân ${nhan} rồi ${dau>0?"cộng":"trừ"} ${cong}.`);
+    }
+
+    else if(man===8){
+        // Vị trí + chẵn/lẻ
+        let x=rand(5,20), a=rand(2,7), b=rand(1,5);
+        data=taoDay(x,(v,i)=>{
+            if(i%2===1) return v+a*i;
+            return v+b*i;
+        },`Quy luật theo vị trí: vị trí lẻ tăng theo ${a}×vị trí, vị trí chẵn tăng theo ${b}×vị trí.`);
+    }
+
+    else if(man===9){
+        // Số nguyên tố / tổng chữ số
+        kieu=rand(0,1);
+        if(kieu===0){
+            let primes=[];
+            let x=rand(5,15);
+            while(primes.length<8){
+                if(soNguyenTo(x)) primes.push(x);
+                x++;
+            }
+            data={
+                day:primes,
+                moTa:"Quy luật: các số nguyên tố liên tiếp."
+            };
+        }else{
+            let x=rand(10,40), buoc=rand(2,6);
+            data=taoDay(x,(v,i)=>v+buoc+i,
+                `Quy luật: bước nhảy tăng dần; kiểm tra thêm tổng chữ số của từng số.`);
+        }
+    }
+
+    else {
+        // Màn 10: nhiều lớp
+        let base=rand(2,7), add=rand(1,5), mul=rand(2,3);
+        let day=[];
+        for(let i=0;i<8;i++){
+            let primeAdd = [2,3,5,7,11,13,17,19][i];
+            let v=base+i*add;
+            v=v*mul+primeAdd;
+            if(i%2===1) v+=tongChuSo(v);
+            day.push(v);
+        }
+        data={
+            day,
+            moTa:`Quy luật nhiều lớp: số nền tăng ${add} → nhân ${mul} → cộng số nguyên tố theo vị trí → vị trí lẻ cộng thêm tổng chữ số.`
+        };
+    }
+
+    dayHienTai=data.day;
+    giaiHienTai=data.moTa;
+
+    // Chọn vị trí ẩn ở giữa để tránh đề quá dễ.
+    let viTriAn=rand(1,dayHienTai.length-2);
+    dapAn=dayHienTai[viTriAn];
+
+    dayso.innerHTML="";
+    for(let i=0;i<dayHienTai.length;i++){
+        let span=document.createElement("div");
+        span.className="so";
+        if(i===viTriAn){
+            span.classList.add("hidden");
+            span.textContent="?";
+        }else{
+            span.textContent=dayHienTai[i];
+        }
+        dayso.appendChild(span);
+    }
+
+    giaiThich.textContent=giaiHienTai;
+    capNhatDoKho();
+    batDauDemGio();
+
+    dangChoi=true;
+    nhap.value="";
+    nhap.disabled=false;
+    kiemtra.disabled=false;
+    setTimeout(()=>nhap.focus(),100);
+}
+
+function capNhatDoKho(){
+    const box=document.getElementById("doKho");
+    box.className="doKho";
+    if(man<=2){
+        box.classList.add("do");
+        box.textContent="🟢 DỄ";
+    }else if(man<=4){
+        box.classList.add("vua");
+        box.textContent="🟡 VỪA";
+    }else if(man<=6){
+        box.classList.add("sieu");
+        box.textContent="🔴 KHÓ";
+    }else if(man<=8){
+        box.classList.add("huyen");
+        box.textContent="🟣 SIÊU KHÓ";
+    }else{
+        box.classList.add("huyen");
+        box.textContent="⚫ HUYỀN THOẠI";
+    }
+}
+
+function layThoiGianVong(){
+    if(man<=3) return 35;
+    if(man<=6) return 40;
+    if(man<=8) return 45;
+    return 55;
+}
+
+function batDauDemGio(){
+    clearInterval(timer);
+    thoiGian=layThoiGianVong();
+    const tong=thoiGian;
+    const thanh=document.getElementById("thanhTime");
+
+    document.getElementById("time").textContent=thoiGian;
+    document.getElementById("time2").textContent=thoiGian;
+    thanh.style.width="100%";
+    thanh.classList.remove("nguyHiem");
+
+    timer=setInterval(()=>{
+        thoiGian--;
+        document.getElementById("time").textContent=thoiGian;
+        document.getElementById("time2").textContent=thoiGian;
+        thanh.style.width=(thoiGian/tong*100)+"%";
+
+        if(thoiGian<=7) thanh.classList.add("nguyHiem");
+
+        if(thoiGian<=0){
+            clearInterval(timer);
+            thua("⏰ HẾT GIỜ!","Bạn đã không trả lời trong thời gian cho phép.");
+        }
+    },1000);
+}
+
+function hienDapAn(noiDung){
+    dapAnHien.style.display="block";
+    soDung.textContent=dapAn;
+    giaiThichSai.textContent=noiDung||giaiHienTai;
+}
+
+function thua(tieuDe,noiDung){
+    clearInterval(timer);
+    dangChoi=false;
+    nhap.disabled=true;
+    kiemtra.disabled=true;
+    ketqua.className="sai";
+    ketqua.textContent=tieuDe;
+    thuong.textContent=`Đáp án đúng là ${dapAn}.`;
+    hienDapAn(noiDung);
+    batdau.textContent="🔄 CHƠI LẠI";
+}
+
+function diemMan(){
+    const coSo=[300,400,500,650,800,1000,1200,1500,1800,2500][man-1];
+    const thuongThoiGian=Math.max(0,thoiGian)*10;
+    return coSo+thuongThoiGian;
+}
+
+function xuLyDung(){
+    clearInterval(timer);
+    dangChoi=false;
+
+    let diemThuong=diemMan();
+    diem+=diemThuong;
+    document.getElementById("diem").textContent=diem;
+
+    ketqua.className="dung";
+    ketqua.textContent=`🎆 CHÍNH XÁC! VƯỢT QUA MÀN ${man}!`;
+    thuong.textContent=`💰 +${diemThuong} điểm`;
+    hienDapAn(giaiHienTai);
+    banPhaoHoa();
+
+    nhap.disabled=true;
+    kiemtra.disabled=true;
+
+    if(man===10){
+        setTimeout(ketThucGame,1200);
+        return;
+    }
+
+    setTimeout(()=>{
+        document.getElementById("continueTitle").textContent=`🔥 MÀN ${man} ĐÃ XONG!`;
+        document.getElementById("continueText").textContent=
+            `Bạn đang có ${diem} điểm. Mở khóa màn ${man+1} với quy luật khó hơn?`;
+        tiepTuc.style.display="block";
+    },900);
+}
+
+function kiemTra(){
+    if(!dangChoi) return;
+
+    let giaTri=nhap.value.trim();
+    if(giaTri===""){
+        ketqua.className="sai";
+        ketqua.textContent="⚠️ Hãy nhập đáp án!";
+        return;
+    }
+
+    let traLoi=Number(giaTri);
+    if(traLoi===dapAn){
+        xuLyDung();
+    }else{
+        clearInterval(timer);
+        dangChoi=false;
+        ketqua.className="sai";
+        ketqua.textContent="❌ SAI RỒI!";
+        thuong.textContent=`Bạn nhập: ${traLoi}`;
+        hienDapAn(giaiHienTai);
+        nhap.disabled=true;
+        kiemtra.disabled=true;
+        batdau.textContent="🔄 CHƠI LẠI";
+    }
+}
+
+function batDauGame(){
+    clearInterval(timer);
+    man=1;
+    diem=0;
+    dangChoi=true;
+
+    document.getElementById("diem").textContent="0";
+    document.getElementById("man").textContent="1";
+    document.getElementById("tongVong").textContent="10";
+
+    ketqua.textContent="";
+    thuong.textContent="";
+    dapAnHien.style.display="none";
+    tiepTuc.style.display="none";
+    chienThang.style.display="none";
+    batdau.textContent="🔄 CHƠI LẠI";
+
+    taoCauHoi();
+}
+
+function choiManTiep(){
+    tiepTuc.style.display="none";
+    man++;
+    document.getElementById("man").textContent=man;
+    taoCauHoi();
+}
+
+function dungLai(){
+    clearInterval(timer);
+    dangChoi=false;
+    tiepTuc.style.display="none";
+    ketqua.className="dung";
+    ketqua.textContent="🏁 Bạn đã dừng cuộc chơi.";
+    thuong.textContent=`Tổng điểm: ${diem}`;
+    batdau.textContent="🔄 CHƠI LẠI";
+}
+
+function ketThucGame(){
+    clearInterval(timer);
+    dangChoi=false;
+    chienThang.style.display="block";
+    chienThang.classList.add("chienThang");
+    document.getElementById("diemCuoi").textContent=`🎯 Tổng điểm: ${diem}`;
+    ketqua.textContent="🔥 BẠN ĐÃ PHÁ ĐẢO 10 MÀN!";
+    ketqua.className="dung";
+    thuong.textContent="🎆 CODE BREAKER — FULL CLEAR!";
+    dayso.innerHTML='<div style="font-size:50px;padding:15px">🏆</div>';
+    dapAnHien.style.display="none";
+    nhap.disabled=true;
+    kiemtra.disabled=true;
+    batdau.textContent="🔄 CHƠI LẠI";
+    banPhaoHoa();
+}
+
+document.getElementById("choiTiep").addEventListener("click",choiManTiep);
+document.getElementById("dungLai").addEventListener("click",dungLai);
+kiemtra.addEventListener("click",kiemTra);
+nhap.addEventListener("keydown",e=>{
+    if(e.key==="Enter") kiemTra();
+});
+batdau.addEventListener("click",batDauGame);
+
+/* =========================
+   PHÁO HOA
+========================= */
+const canvas=document.getElementById("phaoHoa");
+const ctx=canvas.getContext("2d");
+let hatPhao=[];
+let dangBan=false;
+
+function resizeCanvas(){
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize",resizeCanvas);
+
+function taoVuNo(x,y){
+    const mau=Math.floor(Math.random()*360);
+    for(let i=0;i<75;i++){
+        const goc=Math.random()*Math.PI*2;
+        const tocDo=Math.random()*5+2;
+        hatPhao.push({
+            x,y,
+            vx:Math.cos(goc)*tocDo,
+            vy:Math.sin(goc)*tocDo,
+            life:1,
+            gravity:.055,
+            hue:mau,
+            size:Math.random()*2+1
+        });
+    }
+}
+
+function banPhaoHoa(){
+    dangBan=true;
+    taoVuNo(
+        canvas.width*(.2+Math.random()*.6),
+        canvas.height*(.2+Math.random()*.3)
+    );
+    setTimeout(()=>{
+        taoVuNo(
+            canvas.width*(.2+Math.random()*.6),
+            canvas.height*(.2+Math.random()*.3)
+        );
+    },220);
+    vePhaoHoa();
+}
+
+function vePhaoHoa(){
+    if(!dangBan && hatPhao.length===0){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        return;
+    }
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    for(let i=hatPhao.length-1;i>=0;i--){
+        let p=hatPhao[i];
+        p.x+=p.vx;
+        p.y+=p.vy;
+        p.vy+=p.gravity;
+        p.life-=.012;
+
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        ctx.fillStyle=`hsla(${p.hue},100%,70%,${Math.max(p.life,0)})`;
+        ctx.shadowBlur=12;
+        ctx.shadowColor=`hsl(${p.hue},100%,65%)`;
+        ctx.fill();
+
+        if(p.life<=0) hatPhao.splice(i,1);
+    }
+
+    if(hatPhao.length===0) dangBan=false;
+    requestAnimationFrame(vePhaoHoa);
+}
+</script>
+
+</body>
+</html>
